@@ -78,17 +78,29 @@ def actualizar_tablero(tablero: dict) -> None:
     Verifica si es necesario actualizar el estado de alguna tarjeta, en funcion de su propio estado y el de las otras
     Recibe como parametro el tablero
 
-    Una de las primeras cosas que debemos verificar es si paso más del tiempo permitido en 
-    el que podemos tener una tarjeta visible. Para hacer esto debemos obtener el tiempo actual 
-    mediante pygame.time.get_ticks() y luego calcular el tiempo transcurrido desde el ultimo destape.
-      Esto lo podemos hacer calculando la diferencia que tenemos con el dato guardado en 
-      tablero["tiempo_ultimo_destape"].
-
-      
-      
     '''
     tiempo_actual = pygame.time.get_ticks()
+    tiempo_transcurrido = tiempo_actual - tablero["tiempo_ultimo_destape"]
+
+    if tiempo_transcurrido > TIEMPO_MOVIMIENTO:
+        tablero["tiempo_ultimo_destape"] = 0
+        
+        for tarjetas in tablero["tarjetas"]:
+            if tarjetas["descubierto"] == False:
+                tarjetas["visible"] = False
+        
+        tablero["primer_tarjeta_seleccionada"] = None
+        tablero["segunda_tarjeta_seleccionada"] = None
     
+    if tablero["primer_tarjeta_seleccionada"] != None and tablero["segunda_tarjeta_seleccionada"] != None:
+        if tablero["primer_tarjeta_seleccionada"]["identificador"] == tablero["segunda_tarjeta_seleccionada"]["identificador"]:
+            
+            tablero["primer_tarjeta_seleccionada"]["visible"] = True
+            tablero["primer_tarjeta_seleccionada"]["descubierto"] = True
+            tablero["segunda_tarjeta_seleccionada"]["visible"] = True
+            tablero["segunda_tarjeta_seleccionada"]["descubierto"] = True
+    
+
 
 
 
